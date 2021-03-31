@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    // return view('welcome');
-    return view('components.request-for-quotation');
-});
+Route::get('/', [RateController::class, 'index']);
+
+Route::get('/getRate', [RateController::class, 'getRate'])->name('getRate');
