@@ -2,7 +2,6 @@
 
 namespace App\Services\RateServices;
 
-use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 

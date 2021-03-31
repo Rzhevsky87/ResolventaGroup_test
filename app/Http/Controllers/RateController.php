@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\RateServices\RateService;
+use App\Services\RateServices\RateStore;
 use Illuminate\Support\Facades\Log;
 
 class RateController extends Controller
@@ -19,6 +20,8 @@ class RateController extends Controller
 
         $rateService = new RateService($request->all());
         $response = $rateService->getRate();
+
+        RateStore::rateStore($response);
 
         // dd($response);
         // Log::debug([__METHOD__, $response]);
