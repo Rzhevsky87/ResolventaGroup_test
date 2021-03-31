@@ -23,6 +23,8 @@ class RateController extends Controller
             RateStore::rateStore($response);
         }
 
-        return response()->json($response['payload']);
+        return response()->json(
+            $response['payload']['rate'] ? $response['payload'] : ['error' => 'data is fail']
+        );
     }
 }
