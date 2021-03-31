@@ -9,14 +9,23 @@ trait RateStore
 {
     public static function rateStore($data)
     {
-        foreach($data['rate'] as $key => $value) {
-            // Log::debug($data['rate']);
+        if(is_array($data['payload']['rate'])) {
+            foreach($data['payload']['rate'] as $key => $value) {
+                $rate = new Rate();
+                $rate->from = $data['payload']['from'];
+                $rate->to = $data['payload']['to'];
+                Log::debug([$key, $value]);
+                $rate->date = $value['date'];
+                $rate->rate = $value['rate'];
+                $rate->save();
+            }
+        }
+        if(is_float($data['payload']['rate'])) {
             $rate = new Rate();
-            $rate->from = $data['from'];
-            $rate->to = $data['to'];
-            Log::debug([$key, $value]);
-            $rate->date = $value['date'];
-            $rate->rate = $value['rate'];
+            $rate->from = $data['payload']['from'];
+            $rate->to = $data['payload']['to'];
+            $rate->date = $data['payload']['date'];
+            $rate->rate = $data['payload']['rate'];
             $rate->save();
         }
     }

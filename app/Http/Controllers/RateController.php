@@ -16,16 +16,13 @@ class RateController extends Controller
 
     public function getRate(Request $request)
     {
-        // Log::debug([__METHOD__, $request->all()]);
-
         $rateService = new RateService($request->all());
         $response = $rateService->getRate();
 
-        RateStore::rateStore($response);
+        if(!$response['inBase']){
+            RateStore::rateStore($response);
+        }
 
-        // dd($response);
-        // Log::debug([__METHOD__, $response]);
-
-        return response()->json($response);
+        return response()->json($response['payload']);
     }
 }

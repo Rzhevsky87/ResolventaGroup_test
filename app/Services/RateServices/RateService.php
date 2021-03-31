@@ -2,6 +2,7 @@
 
 namespace App\Services\RateServices;
 
+use App\Models\Rate\Rate;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 
@@ -17,7 +18,7 @@ class RateService
     public ?string $start = NULL;
 
     /** @var string|null end date  */
-    public $end = NULL;
+    public ?string $end = NULL;
 
 
     /**
@@ -39,6 +40,41 @@ class RateService
      */
     public function getRate() : array
     {
+        /**
+         * проверка на наличие в базе
+         * если запрашивается массив катировок - задача усложняется
+         * надо продумать как это реализовать
+         */
+        $rates = Rate::where('from', $this->from)->where('to', $this->to)
+            ->whereBetween('date', [$this->start, $this->end])
+            ->get();
+        if($rates->count() > 0) {
+            if($rates->count() > 1) {
+                $rateItem = [];
+                foreach($rates as $rate) {
+                    array_push($rateItem, ['date' => $rate->date, 'rate' => $rate->rate]);
+                }
+                $resp =
+                    [
+                        'from' => $this->from,
+                        'to' => $this->to,
+                        'rate' => $rateItem,
+                    ];
+            }
+            if($rates->count() === 1) {
+                $rate = $rates->first();
+                $resp =
+                    [
+                        'from' => $this->from,
+                        'to' => $this->to,
+                        'date' => $rate->date,
+                        'rate' => $rate->rate
+                    ];
+            }
+
+            return ['payload' => $resp, 'inBase' => true];
+        }
+
         $baseUrl = 'https://api.exchangeratesapi.io/';
         $payload =
             'history?base='.$this->from
@@ -67,7 +103,7 @@ class RateService
             ];
         }
 
-        return $resp;
+        return ['payload' => $resp, 'inBase' => false];
     }
 
     /**
