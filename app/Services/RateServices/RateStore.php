@@ -7,6 +7,13 @@ use Illuminate\Support\Facades\Log;
 
 trait RateStore
 {
+    /**
+     * Save rate to database
+     *
+     * @param array $data
+     *
+     * @return void
+     */
     public static function rateStore($data)
     {
         if(is_array($data['payload']['rate'])) {

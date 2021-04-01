@@ -9,11 +9,23 @@ use Illuminate\Support\Facades\Log;
 
 class RateController extends Controller
 {
+    /**
+     * Show index page
+     *
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function index()
     {
         return view('components.request-for-quotation');
     }
 
+    /**
+     * Retrun rate or list of rates
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\Response|\Illuminate\Contracts\Routing\ResponseFactory
+     */
     public function getRate(Request $request)
     {
         $rateService = new RateService($request->all());
